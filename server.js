@@ -1,32 +1,27 @@
 'use strict'
     let http_server = require("http");
     let fs= require("fs");
+    const url = require('url');
+    const querystring = require('querystring');
+
+
 
 
     let todos =[
-
+      {id:Math.random(),name:"Zurna"}
     ];
 
     require("http").createServer(function(req,res)
     {
-      console.log(req.url);
-      fs.readFile("./public/"+req.url,function(err,data)
+      const parsedUrl = url.parse(req.url);
+      const parsedQuery = querystring.parse(parsedUrl.query);
+      const method = req.method;
+
+      
+
+      if(parsedUrl.pathname=="/todos")
       {
 
-      if(err)
-      {
-        res.statusCode=404;
-        res.end("File not found");
-      }
-      res.statuscode=200;
-      res.end(data);
-      });
-      if(req.url=="/todos")
-      {
-        const parsedUrl = url.parse(req.url);
-        const parsedQuery = querystring.parse(parsedUrl.query);
-        const method = req.method;
-        const url = req.url;
         if(method === 'GET') {
             if(req.url.indexOf('/todos') === 0) {
                 res.setHeader('Content-Type', 'application/json');
@@ -108,5 +103,16 @@
 
 
 }
+fs.readFile("./public/"+req.url,function(err,data)
+{
+
+if(err)
+{
+  res.statusCode=404;
+  res.end("File not found");
+}
+res.statuscode=200;
+res.end(data);
+});
 
     }).listen(4242);
