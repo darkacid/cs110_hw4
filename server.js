@@ -1,14 +1,16 @@
 'use strict'
     let http_server = require("http");
     let fs= require("fs");
-    const url = require('url');
-    const querystring = require('querystring');
+    let url = require('url');
+    let querystring = require('querystring');
 
 
 
 
     let todos =[
-      {id:Math.random(),name:"Zurna"}
+      {id:Math.random(),message:"coffee"},
+      {id:Math.random(),message:"bbq"},
+      {id:Math.random(),message:"tolma"}
     ];
 
     require("http").createServer(function(req,res)
@@ -17,7 +19,17 @@
       const parsedQuery = querystring.parse(parsedUrl.query);
       const method = req.method;
 
-      
+
+      fs.readFile("./public/"+req.url,function(err,data)
+      {
+        if(err)
+        {
+          res.statusCode=404;
+          res.end("File not found");
+        }
+        res.statuscode=200;
+        res.end(data);
+      });
 
       if(parsedUrl.pathname=="/todos")
       {
@@ -26,8 +38,12 @@
             if(req.url.indexOf('/todos') === 0) {
                 res.setHeader('Content-Type', 'application/json');
                 let localTodos = todos;
+                
+                console.log("Query:");
+                console.log(parsedQuery);
 
                 if(parsedQuery.searchtext) {
+                    console.log("SearcTEXT");
                     localTodos = localTodos.filter(function(obj) {
                         return obj.message.indexOf(parsedQuery.searchtext) >= 0;
                     });
@@ -102,17 +118,7 @@
       }
 
 
-}
-fs.readFile("./public/"+req.url,function(err,data)
-{
+    }
 
-if(err)
-{
-  res.statusCode=404;
-  res.end("File not found");
-}
-res.statuscode=200;
-res.end(data);
-});
 
     }).listen(4242);
