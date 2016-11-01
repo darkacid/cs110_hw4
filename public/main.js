@@ -1,6 +1,7 @@
 $(function()
 {
 
+
       $.ajax(
         {
         url: "/todos",
@@ -19,4 +20,5 @@ $(function()
     $("#searchBtn").on("click",function()
     {
         });
+
 });
