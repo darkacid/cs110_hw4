@@ -6,33 +6,46 @@ $(function()
       {
         $("#todoList").html("");
       }
+      const deleteTodo =function(itemID)
+      {
+          $.ajax({
+              url     : "/todos/" + itemID,
+              type    : 'delete',
+              success : function(data) {
+                  // remove the rendering of that item from the UI
+              },
+              error   : function(data) {
+                  alert('Error deleting the item');
+              }
+          });
+      };
       const appendButton=function(data)
       {
         for (i=0;i<data.items.length;i++)
         {
           //data.forEach(tod)
           console.log(data.items[i].id);
-          $("#todoList").append("<li>"+data.items[i].message+' <button id='+data.items[i].id+' class="todo_items">Delete</button>'+"</li>");
-          //$("#todoList").append("<li>"+data.items[i].message+"</li>").append(' <button id='+i+' class="todo_items">Delete</button>');
+        //  $("#todoList").append("<li>"+data.items[i].message+' <button id='+data.items[i].id+' onclick="deleteTodo(data.items[i].id)" class="todo_items">Delete</button>'+"</li>");
+          $("#todoList").append("<li>"+data.items[i].message+"</li>").append('<button id='+data.items[i].id+' onclick="deleteTodo(data.items[i].id)" class="todo_items">Delete</button>');
 
 
         /*
 
           $("#"+data.items[i].id).on("click",function(e)
           {
-            e.preventDefault();
+
             console.log(data.items[i].id);
             //deleteTodo(data.items[i].id);
           });
           */
-
+/*
           $("#"+"0.6615884911767151").on("click",function(e)
           {
-            e.preventDefault();
+
             console.log("yay");
             //deleteTodo(data.items[i].id);
           });
-
+*/
         }
 
 
@@ -58,25 +71,13 @@ $(function()
           }})
         };
 
-          const deleteTodo =function(itemID)
-          {
-              $.ajax({
-                  url     : "/todos/" + itemID,
-                  type    : 'delete',
-                  success : function(data) {
-                      // remove the rendering of that item from the UI
-                  },
-                  error   : function(data) {
-                      alert('Error deleting the item');
-                  }
-              });
-          };
+
       drawRequests();
 
 
-      $("#addBtn").on("click",function(e)
+      $("#addBtn").on("click",function()
       {
-        e.preventDefault();
+
         const val = $('#addTodoTxt').val();
         if(val=="")return;
         $('#addTodoTxt').val(''); // clear the textbox
@@ -103,7 +104,7 @@ $(function()
       //Search for the todo items on click
     $("#searchBtn").on("click",function(e)
     {
-      e.preventDefault();
+
           $.ajax(
             {
             url: "/todos",

@@ -45,7 +45,7 @@
                 console.log("Query:");
                 console.log(parsedQuery);
 
-                if(parsedQuery.searchtext) {                    
+                if(parsedQuery.searchtext) {
                     localTodos = localTodos.filter(function(obj) {
                         return obj.message.indexOf(parsedQuery.searchtext) >= 0;
                     });
