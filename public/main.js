@@ -7,8 +7,8 @@
 
       const appendButton=function(data)
       {
-        //todoItem.id <- Garbage!
-        //this.id <- Actually works!!
+        //todoItem.id
+        //this.id
       data.items.forEach(function (todoItem) {
         $("#todoList").append("<li>"+todoItem.message+' <button id='+todoItem.id+
         ' onclick="deleteTodo(this.id)" class="todo_items">Delete</button>'+"</li>");
