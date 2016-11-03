@@ -1,55 +1,20 @@
-$(function()
-{
-
       //This requests the todo items on page load
+
       const clearRequest=function()
       {
-        $("#todoList").html("");
-      }
-      const deleteTodo =function(itemID)
-      {
-          $.ajax({
-              url     : "/todos/" + itemID,
-              type    : 'delete',
-              success : function(data) {
-                  // remove the rendering of that item from the UI
-              },
-              error   : function(data) {
-                  alert('Error deleting the item');
-              }
-          });
-      };
+        $("#todoList").html("");      }
+
+
       const appendButton=function(data)
       {
-        for (i=0;i<data.items.length;i++)
-        {
-          //data.forEach(tod)
-          console.log(data.items[i].id);
-        //  $("#todoList").append("<li>"+data.items[i].message+' <button id='+data.items[i].id+' onclick="deleteTodo(data.items[i].id)" class="todo_items">Delete</button>'+"</li>");
-          $("#todoList").append("<li>"+data.items[i].message+"</li>").append('<button id='+data.items[i].id+' onclick="deleteTodo(data.items[i].id)" class="todo_items">Delete</button>');
-
-
-        /*
-
-          $("#"+data.items[i].id).on("click",function(e)
-          {
-
-            console.log(data.items[i].id);
-            //deleteTodo(data.items[i].id);
-          });
-          */
-/*
-          $("#"+"0.6615884911767151").on("click",function(e)
-          {
-
-            console.log("yay");
-            //deleteTodo(data.items[i].id);
-          });
-*/
-        }
-
-
+        //todoItem.id
+        //this.id
+      data.items.forEach(function (todoItem) {
+        $("#todoList").append("<li>"+todoItem.message+' <button id='+todoItem.id+
+        ' onclick="deleteTodo(this.id)" class="todo_items">Delete</button>'+"</li>");
+      });
       }
+
       const drawRequests=function()
       {
         clearRequest();
@@ -62,7 +27,7 @@ $(function()
         contentType: "application/x-www-form-urlencoded;utf-8",
         success: function(data)
         {
-            appendButton(data);
+          appendButton(data);
         },
           error: function(e)
           {
@@ -72,7 +37,38 @@ $(function()
         };
 
 
-      drawRequests();
+
+      const updateTodo=function()
+      {
+          $.ajax({
+              url         : "/todos/" + todoItem,
+              type        : 'put',
+              dataType    : 'json',
+              data        : JSON.stringify(todoItem),
+              contentType : "application/json; charset=utf-8",
+              success     : function(data) {
+                drawRequests();
+              },
+              error       : function(data) {
+                  alert('Error creating todo');
+              }
+          });
+      }
+
+        const deleteTodo =function(itemID)
+        {
+            $.ajax({
+                url     : "/todos/" + itemID,
+                type    : 'delete',
+                success : function(data) {
+                  drawRequests();
+                },
+                error   : function(data) {
+                    alert('Error deleting the item');
+                }
+            });
+        };
+
 
 
       $("#addBtn").on("click",function()
@@ -125,5 +121,4 @@ $(function()
 
            });
     });
-
-});
+  drawRequests();

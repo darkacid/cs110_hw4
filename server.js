@@ -34,8 +34,10 @@
       });
 
 
-      if(parsedUrl.pathname=="/todos") // If the requests is for todo items
+      
+      if(parsedUrl.pathname.indexOf("/todos")>=0) // If the requests is for todo items
       {
+        console.log("yay");
         //Execute, if the client requests the items
         if(method === 'GET') {
             if(req.url.indexOf('/todos') === 0) {
