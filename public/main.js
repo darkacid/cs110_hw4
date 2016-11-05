@@ -1,68 +1,22 @@
-      //This requests the todo items on page load
-
-/*
-      $("#testCheckbox").click(function(){
-        let isChecked = $(this).is(':checked');
-        //in this case 'this' corresponds to '#testCheckbox'
-        console.log(isChecked);
-      });
-*/
-
-      //assign id to a variable for testing how jquery handles the argument
-      let checkboxvalue="testCheckbox";
-
-      $("#"+checkboxvalue).change(function()
-      {
-
-       if($(this).is(":checked"))
-       {
-         console.log("You clicked me!");
-
-       }
-       else {
-         console.log("You unclicked me!");
-       }
-
-      });
-
-      const clearRequest=function()
+    const clearRequest=function()
       {
         $("#todoList").html("");
       }
-
-
       const appendButton=function(data)
       {
-        //todoItem.id <- Garbage!
+        //todoItem.id <- Garbage, in console not defined!
         //this.id <- Actually works!!
+        //onclick works, jquery selector doesn't!
         data.items.forEach(function (todoItem)
          {
-
-          $("#todoList").append("<li>"+todoItem.message+ '<input type="checkbox" id='+todoItem.id+' > </input>'+' <button id='+todoItem.id+
+          $("#todoList").append("<li>"+todoItem.message+'<input type="checkbox" id='+todoItem.id+' onclick=updateTodo(this)  > </input>'+ ' <button id='+todoItem.id+
           ' onclick="deleteTodo(this.id)" class="todo_items">Delete</button>'+"</li>");
-
-
-          $('#'+todoItem.id+" :checkbox").change(function()
-                {
-                  console.log("The state changed");
-
-                  if($(todoItem.id).is(":checked"))
-                  {
-                    console.log("You clicked me!");
-
-                  }
-                  else {
-                    console.log("You unclicked me!");
-                  }
-                  //updateTodo(todoItem) <- implement in the next version
-
-
-                });
-
+          //if(todoItem.completed)
+            //$("input#todoItem.id").prop("checked",true);
         });
 
       }
-
+      //This requests the todo items on page load
       const drawRequests=function()
       {
         clearRequest();
@@ -84,16 +38,16 @@
           }})
         };
 
-
-
-
       const updateTodo=function(todoItem)
       {
+        console.log(todoItem);
+        console.log(typeof(todoItem));
+        console.log(JSON.stringify(todoItem));
           $.ajax({
-              url         : "/todos/" + todoItem,
+              url         : "/todos/" + todoItem.id,
               type        : 'put',
               dataType    : 'json',
-              data        : JSON.stringify(todoItem),
+              data        : todoItem.id,//JSON.stringify(todoItem),
               contentType : "application/json; charset=utf-8",
               success     : function(data) {
                 drawRequests();

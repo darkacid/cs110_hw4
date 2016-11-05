@@ -34,7 +34,7 @@
       });
 
 
-      
+
       if(parsedUrl.pathname.indexOf("/todos")>=0) // If the requests is for todo items
       {
         console.log("yay");
@@ -82,27 +82,26 @@
 
               if(method === 'PUT')
                {
+
                     if(req.url.indexOf('/todos') === 0) {
 
-                        // read the content of the message
-                        let body = '';
-                        req.on('data', function (chunk) {
-                            body += chunk;
-                        });
-                        req.on('end', function () {
-                            let jsonObj = JSON.parse(body); // now that we have the content, convert the JSON into an object
+                        let recieved_id =  req.url.substr(7);
+                        console.log(recieved_id);
+                        req.on('end', function ()
+                         {
+                              for(let i = 0; i < todos.length; i++)
+                               {
+                                  if(todos[i].id === recieved_id)
+                                   {
+                                      console.log('wtf');
+                                      todos[i].completed = !(todos[i].completed);
+                                      res.statusCode=200;
+                                      return res.end("10-4 Bro");
+                                  }
+                              }
 
-                            // find the todo in our todos array and replace it with the new object
-                            for(let i = 0; i < todos.length; i++) {
-                                if(todos[i].id === jsonObj.id) { // found the same object
-                                    todos[i] = jsonObj; // replace the old object with the new object
-                                    res.setHeader('Content-Type', 'application/json');
-                                    return res.end(JSON.stringify(jsonObj));
-                                }
-                            }
-
-                            res.statusCode = 404;
-                            return res.end('Data was not found and can therefore not be updated');
+                              res.statusCode = 404;
+                              return res.end('Smth went wrong');
                         });
                         return;
                     }
