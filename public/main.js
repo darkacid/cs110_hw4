@@ -1,18 +1,66 @@
       //This requests the todo items on page load
 
+/*
+      $("#testCheckbox").click(function(){
+        let isChecked = $(this).is(':checked');
+        //in this case 'this' corresponds to '#testCheckbox'
+        console.log(isChecked);
+      });
+*/
+
+      //assign id to a variable for testing how jquery handles the argument
+      let checkboxvalue="testCheckbox";
+
+      $("#"+checkboxvalue).change(function()
+      {
+
+       if($(this).is(":checked"))
+       {
+         console.log("You clicked me!");
+
+       }
+       else {
+         console.log("You unclicked me!");
+       }
+
+      });
+
       const clearRequest=function()
       {
-        $("#todoList").html("");      }
+        $("#todoList").html("");
+      }
 
 
       const appendButton=function(data)
       {
         //todoItem.id <- Garbage!
         //this.id <- Actually works!!
-      data.items.forEach(function (todoItem) {
-        $("#todoList").append("<li>"+todoItem.message+' <button id='+todoItem.id+
-        ' onclick="deleteTodo(this.id)" class="todo_items">Delete</button>'+"</li>");
-      });
+        data.items.forEach(function (todoItem)
+         {
+
+          $("#todoList").append("<li>"+todoItem.message+ '<input type="checkbox" id='+todoItem.id+' > </input>'+' <button id='+todoItem.id+
+          ' onclick="deleteTodo(this.id)" class="todo_items">Delete</button>'+"</li>");
+
+
+          $('#'+todoItem.id+" :checkbox").change(function()
+                {
+                  console.log("The state changed");
+
+                  if($(todoItem.id).is(":checked"))
+                  {
+                    console.log("You clicked me!");
+
+                  }
+                  else {
+                    console.log("You unclicked me!");
+                  }
+                  //updateTodo(todoItem) <- implement in the next version
+
+
+                });
+
+        });
+
       }
 
       const drawRequests=function()
@@ -38,7 +86,8 @@
 
 
 
-      const updateTodo=function()
+
+      const updateTodo=function(todoItem)
       {
           $.ajax({
               url         : "/todos/" + todoItem,
