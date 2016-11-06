@@ -1,21 +1,18 @@
 
-#addTodo{
-  margin-top: 10px;
+#todoList{
+ margin-left: 40%;
+}
+#searchTxt{
+   margin-left: 40%;
+
+}
+#addTodoTxt{
+   margin-left: 40%;
+
 }
 body{
   background-image: url("background.jpg");
   background-repeat:no-repeat;
   background-size:cover;
   background-origin: border-box;
-}
-
-.todo_items{
-
-  align-content: center;
-  position:relative;
-}
-
-#searchTxt{
-   margin-left: 40%;
-
 }

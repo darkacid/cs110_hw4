@@ -6,23 +6,16 @@
       {
         data.items.forEach(function (todoItem)
          {
-               $("#todoList").append("<li>"+todoItem.message+'<input type="checkbox" class='
-               +todoItem.id+' > </input>'+
-              ' <button   class='+todoItem.id+ '>Delete</button>'+"</li>");
+              
+               let li_item=$("<li >"+todoItem.message+
+               '<input type="checkbox" id='+todoItem.id+
+               ' onclick=updateTodo(this.id)> </input>'+' <button id='+
+               todoItem.id+' onclick=deleteTodo(this.id)>Delete</button>'
+               +"</li>");
 
-              // check the status of todo.Completed, and put it into the "checked" property
-              $("input."+todoItem.id+":checkbox").prop("checked",todoItem.completed);
 
-              //Create Listener for the button in each li item
-              $("button."+todoItem.id).click(function(){
-                deleteTodo(todoItem.id);
-              });
-
-              //Create Listener for the checkbox in each li item
-              $("input."+todoItem.id).click(function(){
-                updateTodo(todoItem.id);
-              });
-
+               li_item.find("input").prop("checked",todoItem.completed);
+               $("#todoList").append(li_item);
         });
 
       }
@@ -34,10 +27,10 @@
         {
         url: "/todos",
         type: "get",
-        dataType: "JSON",
-        data: { "default-post":"Loading the page" },
-        contentType: "application/x-www-form-urlencoded;utf-8",
-        success: function(data)
+        dataType: "JSON", //We expect JSON as response
+        data: { "default-post":"Loading the page" }, //sent to the server
+        contentType: "utf-8",
+        success: function(data)// calls the function, with the response data
         {
           appendButton(data);
         },
@@ -45,7 +38,7 @@
           {
             console.log("You screwed up!");
             alert("You screwed up!");
-          }})
+          }});
         };
 drawRequests();
       const updateTodo=function(todoItem)
@@ -53,9 +46,6 @@ drawRequests();
         $.ajax({
               url         : "/todos/" + todoItem,
               type        : 'put',
-              dataType    : 'json',
-              data        : todoItem.id,//JSON.stringify(todoItem),
-              contentType : "application/json; charset=utf-8",
               success     : function() {
                 drawRequests();
               }
@@ -121,7 +111,7 @@ drawRequests();
             },
               error: function(e)
               {
-                console.log("You screwed up_BTN!");
+
                 alert("You screwed up!");
               }
 
