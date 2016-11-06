@@ -1,51 +1,32 @@
 'use strict'
-    let http_server = require("http");
-    let fs= require("fs");
-    let url = require('url');
-    let querystring = require('querystring');
+    const http_server = require("http");
+    const fs= require("fs");
+    const url = require('url');
+    const querystring = require('querystring');
 
 
 
 
     let todos =[
-      {id:Math.random()+'',message:"coffee",completed:false},
-      {id:Math.random()+'',message:"bbq",completed:false},
-      {id:Math.random()+'',message:"tolma",completed:false}
+      {id:Math.floor((Math.random() * 1000000000) + 1)+'',message:"coffee",completed:false},
+      {id:Math.floor((Math.random() * 1000000000) + 1)+'',message:"bbq",completed:false},
+      {id:Math.floor((Math.random() * 1000000000) + 1)+'',message:"tolma",completed:false}
     ];
 
-    require("http").createServer(function(req,res)
+    http_server.createServer(function(req,res)
     {
       const parsedUrl = url.parse(req.url);
       const parsedQuery = querystring.parse(parsedUrl.query);
       const method = req.method;
 
 
-
-      //Server the file to the client
-      fs.readFile("./public/"+req.url,function(err,data)
-      {
-        if(err)
-        {
-          res.statusCode=404;
-          res.end("File not found");
-        }
-        res.statuscode=200;
-        res.end(data);
-      });
-
-
-
       if(parsedUrl.pathname.indexOf("/todos")>=0) // If the requests is for todo items
       {
-        console.log("yay");
         //Execute, if the client requests the items
         if(method === 'GET') {
             if(req.url.indexOf('/todos') === 0) {
                 res.setHeader('Content-Type', 'application/json');
                 let localTodos = todos;
-
-                console.log("Query:");
-                console.log(parsedQuery);
 
                 if(parsedQuery.searchtext) {
                     localTodos = localTodos.filter(function(obj) {
@@ -70,7 +51,7 @@
                       });
                       req.on('end', function () {
                           let jsonObj = JSON.parse(body);  // now that we have the content, convert the JSON into an object
-                          jsonObj.id = Math.random() + ''; // assign an id to the new object
+                          jsonObj.id = Math.floor((Math.random() * 100000000) + 1) + ''; // assign an id to the new object
                           todos[todos.length] = jsonObj;   // store the new object into our array (our 'database')
 
                           res.setHeader('Content-Type', 'application/json');
@@ -83,26 +64,24 @@
               if(method === 'PUT')
                {
 
-                    if(req.url.indexOf('/todos') === 0) {
+                    if(req.url.indexOf('/todos') === 0)
+                    {
 
                         let recieved_id =  req.url.substr(7);
-                        console.log(recieved_id);
-                        req.on('end', function ()
-                         {
-                              for(let i = 0; i < todos.length; i++)
-                               {
-                                  if(todos[i].id === recieved_id)
-                                   {
-                                      console.log('wtf');
+                        for(let i = 0; i < todos.length; i++)
+                          {
+                              if(todos[i].id === recieved_id)
+                                  {
+                                     console.log("Req URL");
+                                      console.log(req.url);
                                       todos[i].completed = !(todos[i].completed);
                                       res.statusCode=200;
                                       return res.end("10-4 Bro");
                                   }
                               }
-
                               res.statusCode = 404;
                               return res.end('Smth went wrong');
-                        });
+
                         return;
                     }
               }
@@ -126,6 +105,16 @@
 
 
     }
-
+    //Server the file to the client
+    fs.readFile("./public/"+req.url,function(err,data)
+    {
+      if(err)
+      {
+        res.statusCode=404;
+        res.end("File not found");
+      }
+      res.statuscode=200;
+      res.end(data);
+    });
 
     }).listen(4242);

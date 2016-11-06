@@ -4,15 +4,25 @@
       }
       const appendButton=function(data)
       {
-        //todoItem.id <- Garbage, in console not defined!
-        //this.id <- Actually works!!
-        //onclick works, jquery selector doesn't!
         data.items.forEach(function (todoItem)
          {
-          $("#todoList").append("<li>"+todoItem.message+'<input type="checkbox" id='+todoItem.id+' onclick=updateTodo(this)  > </input>'+ ' <button id='+todoItem.id+
-          ' onclick="deleteTodo(this.id)" class="todo_items">Delete</button>'+"</li>");
-          //if(todoItem.completed)
-            //$("input#todoItem.id").prop("checked",true);
+               $("#todoList").append("<li>"+todoItem.message+'<input type="checkbox" class='
+               +todoItem.id+' > </input>'+
+              ' <button   class='+todoItem.id+ '>Delete</button>'+"</li>");
+
+              // check the status of todo.Completed, and put it into the "checked" property
+              $("input."+todoItem.id+":checkbox").prop("checked",todoItem.completed);
+
+              //Create Listener for the button in each li item
+              $("button."+todoItem.id).click(function(){
+                deleteTodo(todoItem.id);
+              });
+
+              //Create Listener for the checkbox in each li item
+              $("input."+todoItem.id).click(function(){
+                updateTodo(todoItem.id);
+              });
+
         });
 
       }
@@ -37,26 +47,20 @@
             alert("You screwed up!");
           }})
         };
-
+drawRequests();
       const updateTodo=function(todoItem)
       {
-        console.log(todoItem);
-        console.log(typeof(todoItem));
-        console.log(JSON.stringify(todoItem));
-          $.ajax({
-              url         : "/todos/" + todoItem.id,
+        $.ajax({
+              url         : "/todos/" + todoItem,
               type        : 'put',
               dataType    : 'json',
               data        : todoItem.id,//JSON.stringify(todoItem),
               contentType : "application/json; charset=utf-8",
-              success     : function(data) {
+              success     : function() {
                 drawRequests();
-              },
-              error       : function(data) {
-                  alert('Error creating todo');
               }
-          });
-      }
+              });
+      };
 
         const deleteTodo =function(itemID)
         {
@@ -71,7 +75,6 @@
                 }
             });
         };
-
 
 
       $("#addBtn").on("click",function()
@@ -124,4 +127,3 @@
 
            });
     });
-  drawRequests();
