@@ -17,7 +17,7 @@
     {
       const parsedUrl = url.parse(req.url);
       const parsedQuery = querystring.parse(parsedUrl.query);
-      const method = req.method;
+      const method = req.method;     
 
 
       //Serve the file to the client
